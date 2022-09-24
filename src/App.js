@@ -43,16 +43,31 @@ function App() {
     setIsLoading(false);
   }
 
+  let content = <p>Шуток не найдено.</p>;
+
+  if (jokes.length > 0) {
+    content = <JokeList jokes={jokes} />;
+  }
+
+  if (error) {
+    content = <p>{error}</p>;
+  }
+
+  if (isLoading) {
+    content = <p>Загрузка шуток...</p>;
+  }
+
   return (
     <React.Fragment>
       <section>
         <button onClick={fetchJokesHandler}>Fetch Jokes</button>
       </section>
       <section>
-        {!isLoading && jokes.length > 0 && <JokeList jokes={jokes} />}
+        {content}
+        {/* {!isLoading && jokes.length > 0 && <JokeList jokes={jokes} />}
         {!isLoading && jokes.length === 0 && !error && <p>Шуток не найдено.</p>}
         {isLoading && <p>Загрузка шуток...</p>}
-        {!isLoading && error && <p>{error}</p>}
+        {!isLoading && error && <p>{error}</p>} */}
       </section>
     </React.Fragment>
   );
