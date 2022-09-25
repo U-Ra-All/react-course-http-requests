@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
 import JokeList from "./components/JokeList";
 import "./App.css";
@@ -23,7 +23,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  async function fetchJokesHandler() {
+  const fetchJokesHandler = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
@@ -41,7 +41,11 @@ function App() {
       setError(e.message);
     }
     setIsLoading(false);
-  }
+  }, []);
+
+  useEffect(() => {
+    fetchJokesHandler();
+  }, [fetchJokesHandler]);
 
   let content = <p>Шуток не найдено.</p>;
 
