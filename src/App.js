@@ -29,7 +29,7 @@ function App() {
     setError(null);
     try {
       const response = await fetch(
-        "https://react-course-http-8220d-default-rtdb.firebaseio.com/"
+        "https://react-course-http-8220d-default-rtdb.firebaseio.com/jokes.json"
       );
 
       if (!response.ok) {
@@ -37,7 +37,18 @@ function App() {
       }
       const data = await response.json();
 
-      setJokes(data);
+      const loadedJokes = [];
+
+      for (const key in data) {
+        loadedJokes.push({
+          id: key,
+          type: data[key].type,
+          setup: data[key].setup,
+          punchline: data[key].punchline,
+        });
+      }
+
+      setJokes(loadedJokes);
     } catch (e) {
       setError(e.message);
     }
@@ -48,13 +59,24 @@ function App() {
     fetchJokesHandler();
   }, [fetchJokesHandler]);
 
-  function addJokeHandler(joke) {
-    console.log(joke);
+  async function addJokeHandler(joke) {
+    const response = await fetch(
+      "https://react-course-http-8220d-default-rtdb.firebaseio.com/jokes.json",
+      {
+        method: "POST",
+        body: JSON.stringify(joke),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const data = await response.json();
+    console.log(data);
   }
 
   let content = <p>Шуток не найдено.</p>;
 
-  if (jokes.length > 0) {
+  if (jokes !== null && jokes !== undefined && jokes.length > 0) {
     content = <JokeList jokes={jokes} />;
   }
 
